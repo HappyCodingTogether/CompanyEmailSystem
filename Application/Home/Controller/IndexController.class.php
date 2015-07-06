@@ -3,6 +3,86 @@ namespace Home\Controller;
 use Think\Controller;
 class IndexController extends Controller {
     public function index(){
-        $this->show('<style type="text/css">*{ padding: 0; margin: 0; } div{ padding: 4px 48px;} body{ background: #fff; font-family: "微软雅黑"; color: #333;font-size:24px} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 1.8em; font-size: 36px } a,a:hover,{color:blue;}</style><div style="padding: 24px 48px;"> <h1>:)</h1><p>欢迎使用 <b>ThinkPHP</b>！</p><br/>版本 V{$Think.version}</div><script type="text/javascript" src="http://ad.topthink.com/Public/static/client.js"></script><thinkad id="ad_55e75dfae343f5a1"></thinkad><script type="text/javascript" src="http://tajs.qq.com/stats?sId=9347272" charset="UTF-8"></script>','utf-8');
+        if(!isset($_SESSION['userId'])||!isset($_SESSION['roleId'])){
+            $this->display('login');
+        }else{
+            $this->display();
+        }
     }
+    public function add(){
+        $this->display();
+    }
+    public function addBook(){
+        $this->display();
+    }
+    public function base(){
+        $this->display();
+    }
+    public function edit(){
+        $userModel=M('User');
+        $user=$userModel->where('role_id=4')->select();
+        $this->assign('userList',$user);
+        $this->display();
+
+    }
+    public function editor(){
+        $this->display();
+    }
+    public function email(){
+        $this->display();
+    }
+    public function login(){
+        if(!isset($_SESSION['userId'])||!isset($_SESSION['roleId'])){
+            $this->display();
+        }else{
+            $this->display('index');
+        }
+    }
+    public function checkLogin(){
+        $map['account']=$_POST['account'];
+        $userModel=M('User');
+        $user=$userModel->where($map)->find();
+        if($user==NULL||$user==''){
+            $this->error('该用户不存在');
+        }else{
+            if($user['password']==md5($_POST['password'])){
+                $_SESSION['roleId']=$user['role_id'];
+                $_SESSION['userId']=$user['id'];
+                $_SESSION['userName']=$user['name'];
+                $_SESSION['account']=$user['account'];
+                if($user['role_id']==1){
+                    $this->redirect('User/manager');
+                }
+                $this->redirect("index");
+            }else{
+                $this->error(' 密码错误') ;
+            }
+        }
+    }
+
+    public function logout(){
+        unset($_SESSION['userId']);
+        unset($_SESSION['roleId']);
+        unset($_SESSION['account']);
+        $this->redirect('Index/login');
+    }
+
+
+    public function manager(){
+        $this->display();
+    }
+    public function safe(){
+        $this->display();
+    }
+    public function set(){
+        $this->display();
+    }
+    public function table(){
+        $displayModel = M('User');
+        $result = $displayModel->select();//选择邮件处理人员
+        $this->assign('user',$result);
+        $this->display();
+    }
+
+
 }

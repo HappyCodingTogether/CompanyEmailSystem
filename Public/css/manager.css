@@ -1,0 +1,9 @@
+.sub-header {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+a.li {
+    color: #e8fefa;
+    text-align: center;
+    text-decoration:none;
+}

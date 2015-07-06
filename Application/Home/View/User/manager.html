@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <meta charset="UTF-8">
+    <title>后台管理系统</title>
+    <link rel="stylesheet" href="__ROOT__/Public/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="__ROOT__/Public/css/kkkk.css"/>
+    <link rel="stylesheet" href="__ROOT__/Public/css/manager.css"/>
+    <script type="text/javascript" src="__ROOT__/Public/js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="__ROOT__/Public/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__ROOT__/Public/js/safe.js"></script>
+
+</head>
+<body>
+<div class="col-md-2 sidebar">
+    <ul class="navContainer">
+        <li  class="logo"><a href="__URL__/manager" style="text-decoration: none">后台管理系统</a></li>
+        <li class="normal" ><a href="__URL__/manager" style="text-decoration: none">员工列表</a></li>
+        <li  class="normal" ><a href="__URL__/mailSet" style="text-decoration: none">邮箱设置</a></li>
+    </ul>
+</div>
+<div class="head-body" >
+    <div class="rightHead">
+        <div class="right">
+            <a href="#">反馈建议</a> | <a href="__APP__/Home/Index/logout">退出</a>
+        </div>
+        <div class="input-box">
+            <input class="input"id="usernamea">
+            <button class="search-btn"><span class="glyphicon glyphicon-search"></span></button>
+        </div>
+    </div>
+    <div class="leftHead">
+        <p><b id="username">用户名 </b><<span id="userAddress">123456@mail.com</span>><p>
+        <a href="#">邮箱首页</a> | <a href="#">设置</a>
+    </div>
+
+</div>
+
+<div class ="main-body"   >
+
+    <div class="">
+        <div class="col-md-2"></div>
+        <div class="col-md-10 email-box " >
+            <div class="btn-group" role="group" aria-label="...">
+                <a href="add.html" type="button" class="btn btn-default">添加</a>
+                <button type="button" class="btn btn-default">删除</button>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>姓名</th>
+                        <th>邮箱地址</th>
+                        <th>电话</th>
+                        <th>身份</th>
+                        <th>编辑</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <span hidden id="userCount">{$userCount}</span>
+
+
+                    <volist name="userList" id="user">
+                        <tr class="table-tr">
+                        <td><input type="checkbox" name="userIds" value="{$user.id}"></td>
+                        <td>{$user.name}</td>
+                        <td>{$user.email}</td>
+                        <td>{$user.phone}</td>
+                        <td>{$user.role_name}</td>
+                            <td>
+                                <a href="__APP__/Home/User/editor?id={$user.id}" style="width: 30px"type="button" class="btn btn-default btn-xs" aria-label="Left Align">
+                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    </volist>
+
+                    </tbody>
+                </table>
+            </div>
+            <nav>
+                <ul class="pager">
+                    <li><a href="#" onclick="prepage()">上一页</a></li>
+                    <li><a href="#" id="nextpage" data-value="{$pageNow}" onclick="nextpage()">下一页</a></li>
+                </ul>
+            </nav>
+
+        </div>
+
+
+    </div>
+</div>
+</body>
+</html>

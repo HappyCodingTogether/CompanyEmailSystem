@@ -1,0 +1,33 @@
+body{
+    font-family: "Microsoft YaHei","微软雅黑","宋体",Arial,Verdana,sans-serif;
+}
+
+
+.main-body .button-group{
+    margin-top:20px;
+    margin-left:20px;
+    margin-bottom:20px;
+}
+.main-body .button-group .page{
+    padding-left:160px;
+}
+.main-body .button-group .button-circle{
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    background: #ffffff;
+    
+}
+.main-body{
+
+    overflow-y:auto;
+    overflow-x:hidden;
+}
+
+.main-body .mail-title{
+
+    text-overflow:ellipsis;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+}

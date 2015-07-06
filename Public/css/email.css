@@ -1,0 +1,25 @@
+body{
+    font-family: "Microsoft YaHei","微软雅黑","宋体",Arial,Verdana,sans-serif;
+}
+.related-email  ul{
+    list-style-type: none;
+    margin:0 0 4px 0px;
+    padding:0 0 4px 5px;
+}
+.related-email .topic-email{
+    margin-bottom:10px;
+    font-size:1.2em;
+}
+.related-email .name{
+    color:green;
+    font-weight: bolder;
+    margin-right: 5px;
+}
+.related-email .forth{
+    display:inline-block;
+    width:50px;
+    font-width:bold;
+}
+.related-email .gray{
+    color:gray;
+}

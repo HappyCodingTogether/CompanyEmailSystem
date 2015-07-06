@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <meta charset="UTF-8">
+    <title>邮件处理系统登录</title>
+    <link rel="stylesheet" href="__ROOT__/Public/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="__ROOT__/Public/css/login.css"/>
+    <script type="text/javascript" src="__ROOT__/Public/js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="__ROOT__/Public/js/login.js"></script>
+    <script type="text/javascript" src="__ROOT__/Public/js/bootstrap.min.js"></script>
+
+
+
+</head>
+
+<body background="__ROOT__/Public/images/background.png">
+    <div class="head-body">
+    </div>
+    <div class="row main-body">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4 login-box">
+            <form class="form-horizontal" action="__URL__/checkLogin" method="post" id="loginInfo">
+                <div class="form-gruop">
+                    <img class="logo" >
+                </div>
+                <div class="form-group">
+                    <label class="col-md-1"></label>
+                    <div class="col-md-10">
+                        <div class="input-box ">
+                            <span class="glyphicon glyphicon-user " style="color:#ADADAD;margin-right:5px; "></span>
+                            <input type="email" class="input " id="username"  name="account"  style="width:240px" placeholder="用户名" >
+                        </div>
+                        <div style="height:25px">
+                        <p id="verify-username" style="display: none; color:#FF0000">用户名不能为空</p>
+                        </div>
+                    </div>
+                    <label class="col-md-1"></label>
+
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-1"></label>
+                    <div class="col-sm-10">
+                        <div class="input-box">
+                            <span class="glyphicon glyphicon-lock" style="color:#ADADAD;margin-right:5px;"></span>
+                            <input  type="password" class="input" name="password" id="password"  style="width:240px;" placeholder="密码">
+                        </div>
+                        <div style="height:25px">
+                            <p id="verify-password" style="display: none; color:#FF0000">密码不能为空</p>
+                        </div>
+                    </div>
+                    <label class="col-sm-1"></label>
+                </div>
+                <div style="height:15px"></div>
+                <div class="form-group row">
+                    <label class="col-sm-1"></label>
+                    <div class="col-sm-6">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"> 记住密码
+                            </label>
+                        </div>
+                    </div>
+                    <div class=" col-sm-5">
+                        <button type="button" class="col-md-9 btn login-btn" data-loading-text="登录中..." >登录</button>
+                    </div>
+                </div>
+                <label class="col-sm-1"></label>
+            </form>
+        </div>
+        <div class="col-md-4">
+        </div>
+    </div>
+</body>
+</html>

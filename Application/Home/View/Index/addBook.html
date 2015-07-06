@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<script> 
+function show(c_Str) {
+	if(document.all(c_Str).style.display=='none') 
+		{document.all(c_Str).style.display='block';} 
+	else
+		{document.all(c_Str).style.display='none';}
+}
+
+</script>
+
+<head lang="zh-CN">
+    <meta charset="UTF-8">
+    <title>邮件处理系统</title>
+    <link rel="stylesheet" href="__ROOT__/Public/css/base.css"/>
+	<link rel="stylesheet" href="__ROOT__/Public/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="__ROOT__/Public/css/addBook.css"/>
+	<script type="text/javascript" src="__ROOT__/Public/js/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="__ROOT__/Public/js/base.js"></script>
+
+</head>
+<body>
+<include file="Public:base"/>
+	<div class ="main-body">
+	    	<div class="row" style="width:100%">
+	    		<div class="col-md-10 filled">
+					<div class="col-md-9 group">
+						<div class="head">
+							<button>添加</button>
+							<button> 写信 </button>
+							<button> 删除 </button>
+							<span class="glyphicon glyphicon-search search-btn" role="button" href="#"></span>
+							<input class="input" placeholder="搜索联系人">
+						</div>
+						<div class="groups">
+							<div class="agroup">
+								<script type="text/javascript">
+								$(document).ready(function(){
+									$(".list").click(function(){
+										$(".list").css("background","white");
+										$(this).css("background","#e0e0e0");
+										$(".detail .namex").html($("#"+$(this).attr("id")+" .name").html());
+										$(".detail .eAddx").html($("#"+$(this).attr("id")+" .eAdd").html());
+										$(".detail .telx").html($("#"+$(this).attr("id")+" .tel").html());
+									});
+								});
+								
+								</script>
+								<div class="groupHead" role="button" onclick=show("ga") onselectstart="return false">全部联系人</div>
+								<ul id="ga">
+									<li class="row title">
+										<span class="col-md-1"></span>
+										<span class="col-md-3">姓名</span>
+										<span class="col-md-4">邮箱地址</span>
+										<span class="col-md-4">手机号码</span>
+									<li id="list1"class="row list" role="button">
+										<span class="col-md-1"><input type="checkbox"></span>
+										<span class="col-md-3 name">王鹏程</span>
+										<span class="col-md-4 eAdd">wangpengcheng@mail.com</span>
+										<span class="col-md-4 tel">12341234123</span>
+									</li>
+									<li id="list2" class="row list" role="button">
+										<span class="col-md-1"><input type="checkbox"></span>
+										<span class="col-md-3 name">王悦宁</span>
+										<span class="col-md-4 eAdd">wangyuening@mail.com</span>
+										<span class="col-md-4 tel">12345123451</span>
+									</li>
+								</ul>
+							</div>
+							<div class="agroup">
+								<div class="groupHead" role="button" onclick=show("g1") onselectstart="return false">组名</div>
+								<ul id="g1">
+									<li class="row title">
+										<span class="col-md-1"></span>
+										<span class="col-md-3">姓名</span>
+										<span class="col-md-4">邮箱地址</span>
+										<span class="col-md-4">手机号码</span>
+									<li id="list3"class="row list" role="button">
+										<span class="col-md-1"><input type="checkbox"></span>
+										<span class="col-md-3 name">李岳擂</span>
+										<span class="col-md-4 eAdd">liyuelei@mail.com</span>
+										<span class="col-md-4 tel">123456123456</span>
+									</li>
+									<li id="list4" class="row list" role="button">
+										<span class="col-md-1"><input type="checkbox"></span>
+										<span class="col-md-3 name">李佳骏</span>
+										<span class="col-md-4 eAdd">lijiajun@mail.com</span>
+										<span class="col-md-4 tel">12345123451</span>
+									</li>
+								</ul>
+							</div>
+							<div class="agroup">
+								<div class="groupHead" role="button" onclick=show("g2") onselectstart="return false">组名</div>
+								<ul id="g2">
+									<li class="row title">
+										<span class="col-md-1"></span>
+										<span class="col-md-3">姓名</span>
+										<span class="col-md-4">邮箱地址</span>
+										<span class="col-md-4">手机号码</span>
+									<li class="row list" role="button">
+										<span class="col-md-1"><input type="checkbox"></span>
+										<span class="col-md-3 name">王鹏程</span>
+										<span class="col-md-4 eAdd">wangpengcheng@mail.com</span>
+										<span class="col-md-4 tel">12341234123</span>
+									</li><li class="row list" role="button">
+										<span class="col-md-1"><input type="checkbox"></span>
+										<span class="col-md-3 name">王鹏程</span>
+										<span class="col-md-4 eAdd">wangpengcheng@mail.com</span>
+										<span class="col-md-4 tel">12341234123</span>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+			<div class="col-md-3 detail">
+					<div class="namex" style="font-size:23px;margin-top:60px;"></div>
+					<div class="eAddx" style="font-size:16px;margin-top:50px;"></div>
+					<div class="telx" style="font-size:18px;margin-top:40px;margin-bottom:100px"></div>
+			</div>
+		</div>
+		</div>
+	</div>
+</body>
+	
+</html>

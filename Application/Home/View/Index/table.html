@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <meta charset="UTF-8">
+    <title>邮件处理系统</title>
+    <link rel="stylesheet" href="__ROOT__/Public/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="__ROOT__/Public/css/base.css"/>
+    <link rel="stylesheet" href="__ROOT__/Public/css/table.css"/>
+    <script type="text/javascript" src="__ROOT__/Public/js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="__ROOT__/Public/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__ROOT__/Public/js/table.js"></script>
+    <script type="text/javascript" src="__ROOT__/Public/js/base.js"></script>
+
+
+</head>
+<body>
+<!--弹窗选择分发给的人-->
+
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="">
+    <div class="modal-dialog ">
+        <div class="modal-content" id="content">
+
+            <form class=" "  action="__APP__/Home/Distribution/distribute" method="post">
+                <div class="modal-header  " >
+
+                    <h4 class="modal-title col-md-6 ">审阅</h4>
+                    <h4 class="modal-title col-md-6">处理</h4>
+                    </br>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-6">
+                        <input type="hidden" value="" name="mailIds" id="mailIds"/>
+                        <volist name="user" id="value">
+                            <input type="checkbox" name="userRead[]" value="{$value.id}" id="{$value.id}read" >
+                            <label for="{$value.id}read">{$value.name}({$value.account})</label>
+                            <br/>
+                        </volist>
+                    </div>
+                    <div class="col-md-6">
+
+                        <volist name="user" id="value">
+                            <input type="radio" name="userWrite" value="{$value.id}" id="{$value.id}write">
+                            <label for="{$value.id}write" >{$value.name}({$value.account})</label>
+                            <br/>
+                        </volist>
+                    </div>
+                    <br style="clear:both;" />
+                </div>
+
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-primary">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--弹窗选择分发给的人-->
+
+
+<include file="Public:base"/>
+<div class ="main-body"   >
+    <input type="hidden" id="role_id_hidden" value="{$_SESSION['roleId']}"/>
+
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-10 email-box ">
+            <div class="button-group  row">
+                <span id="emailListURL" hidden>__APP__/Home/EmailList/</span>
+                <div class="btn-group  col-md-8" role="group" aria-label="...">
+                    <button type="button" class="btn btn-default">删除</button>
+                    <button type="button" class="btn btn-default">举报</button>
+                    <button type="button" class="btn btn-default">刷新</button>
+                    <button type="button" class="btn btn-default"  data-toggle="modal" data-target=".bs-example-modal-lg" onclick="transferEmailId()">分发</button>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            标记为
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">已读邮件</a></li>
+                            <li><a href="#">未读邮件</a></li>
+                        </ul>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            移动到
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">已发送</a></li>
+                            <li><a href="#">已删除</a></li>
+                            <li><a href="#">草稿箱</a></li>
+                        </ul>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            标签
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">重要</a></li>
+                            <li><a href="#">很重要</a></li>
+                            <li><a href="#">一点都不重要</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-4 page">
+                    <div class="btn-group " role="group" aria-label="...">
+                        <button type="button" class="btn btn-default" onclick="prepage()">上一页</button>
+                        <button type="button" class="btn btn-default" onclick="nextpage()">下一页</button>
+                        <!--<button class="button-circle"><span class="glyphicon glyphicon-arrow-left"></span></button>-->
+                        <!--<button class="button-circle"><span class="glyphicon glyphicon-arrow-right"></span></button>-->
+                    </div>
+
+                </div>
+
+
+            </div>
+            <div class="mail-table  well-sm">
+                <table class="table table-hover table-striped">
+                    <thead>
+                    <tr class="row">
+                        <th  class="col-md-1"></th>
+                        <th  class="col-md-2">标签</th>
+                        <th  class="col-md-2">发件人</th>
+                        <th class="col-md-5" >主题</th>
+                        <th class="col-md-2" >时间</th>
+                    </tr>
+                    </thead>
+                    <tbody id="alist">
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-md-5"></div>
+                <div class="btn-group col-md-2" role="group" aria-label="...">
+                    <button type="button" class="btn btn-default" onclick="prepage()">上一页</button>
+                    <button type="button" id="nextpage" data-value="1" class="btn btn-default" onclick="nextpage()">下一页</button>
+                </div>
+                <div class="col-md-5"></div>
+            </div>
+
+
+        </div>
+    </div>
+</body>
+</html>

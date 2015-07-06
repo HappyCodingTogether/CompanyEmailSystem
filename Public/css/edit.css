@@ -1,0 +1,29 @@
+
+
+.main-body .mail-title{
+
+    text-overflow:ellipsis;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+}
+.address-list {
+
+
+    margin-left:-50px;
+    margin-top:50px;
+}
+
+.list-group{
+    height:430px;
+    overflow-y:auto;
+
+}
+.control-label{
+
+    padding-left:0px;
+    padding-right:0px;
+
+}
+#editor {overflow:scroll; height:300px}
