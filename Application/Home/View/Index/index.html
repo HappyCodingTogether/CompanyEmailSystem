@@ -5,19 +5,98 @@
     <title>邮件处理系统</title>
 	<link rel="stylesheet" href="__ROOT__/Public/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="__ROOT__/Public/css/base.css"/>
+	<link rel="stylesheet" href="__ROOT__/Public/css/index.css"/>
+	<link rel="stylesheet" href="__ROOT__/Public/css/buttonCom.css" />
 	<script type="text/javascript" src="__ROOT__/Public/js/jquery-2.1.1.min.js"></script>
 	<script type="text/javascript" src="__ROOT__/Public/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="__ROOT__/Public/js/base.js"></script>
-
 </head>
+<script type="text/javascript">
+	$(function() {
+	$("#iconW").click(function(){
+		sessionStorage.email_from="";
+        sessionStorage.email_id="";
+        sessionStorage.email_content="";
+        window.location.href="__APP__/Home/Index/edit ";
+    });
+    $("#iconD").click(function(){
+        window.location.href="";
+    });
+    $("#iconR").click(function(){
+        window.location.href="__APP__/Home/Index/table?type=all";
+    });
+    $("#iconA").click(function(){
+        window.location.href="__APP__/Home/Index/addBook";});
+    $("#iconC").click(function(){
+        window.location.href="__APP__/Home/Index/statistics";
+
+    });
+
+});
+</script>
 <body>
 <include file="Public:base"/>
-<div class ="main-body"   sytle="height:100%">
+			<div class="col-md-10 col-md-offset-2 email-box"   onselectstart="return false;">
+				<div class="email-box-head" style="width:100%;height:125px;">
+			        <div style="height:50px;"></div>
+					<ul class="button-group">
+					<if condition="$_SESSION['roleId'] eq 2">
 
-		<div class="row">
-			<div class="col-md-2"></div>
-			<div class="col-md-10 email-box ">
+						<li class="fun-button"id="">
+							<a href='__APP__/Home/Index/table?type=notdb' class="fun-a" >未分发邮件<span style="color:#3d98bf">({$data.distributeMail})</span></a><span class="fun-line"></span>
+						</li>
 
+					</if>
+						<if condition="$_SESSION['roleId'] eq 3">
+
+							<li class="fun-button"id="">
+								<a href='__APP__/Home/Index/table?type=all' class="fun-a" >新邮件<span style="color:#3d98bf">({$data.newMail})</span></a><span class="fun-line"></span>
+							</li>
+							<li class="fun-button"><a href='#'class="fun-a" style="color:#66ff00">|</a></li>
+							<li class="fun-button"id="">
+								<a href='__APP__/Home/Index/table?type=type=all' class="fun-a" >快到期邮件<span style="color:#3d98bf">({$data.deadlineMail})</span></a><span class="fun-line"></span>
+							</li>
+						</if>
+						<if condition="$_SESSION['roleId'] eq 4">
+
+							<li class="fun-button" id="">
+								<a href='__APP__/Home/Index/table?type=type=notverify' class="fun-a" >未审核邮件<span style="color:#3d98bf">({$data.verifyMail})</span></a><span class="fun-line"></span>
+							</li>
+						</if>
+
+			        </ul>
+			    </div>
+				<div class="email-box-body" style="width:100%">
+					<p style="margin-top:10px;font-size:20px;"><label>欢迎回来,</label><label style="margin-left:10px;color:#3d98bf"><?php echo $_SESSION['userName'];?></label></p>
+					<div class="iconContainer">
+						<ul class="cbp-ig-grid">
+							<li style="border-left:0">
+								<a id="iconR" href="#">
+									<span class="glyphicon glyphicon-envelope cbp-ig-icon "></span>
+									<h3 class="cbp-ig-title">收信</h3>
+								</a>
+							</li>
+							<li>
+								<a id="iconW" href="#">
+									<span class="cbp-ig-icon glyphicon glyphicon-pencil"></span>
+									<h3 class="cbp-ig-title">写信</h3>
+								</a>
+							</li>
+							<li>
+								<a id="iconD" href="#">
+									<span class="cbp-ig-icon glyphicon glyphicon-folder-open"></span>
+									<h3 class="cbp-ig-title">文件夹</h3>
+								</a>
+							</li>
+							<li style="border-right:0">
+								<a id="iconC" href="#">
+									<span class="cbp-ig-icon glyphicon glyphicon-stats"></span>
+									<h3 class="cbp-ig-title">统计</h3>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
 			</div>
 
 

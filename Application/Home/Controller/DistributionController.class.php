@@ -10,11 +10,12 @@ use Think\Controller;
 
 class DistributionController extends Controller{
 
-    public function distribute(){//分发功能函数
+    public function distribute(){//分发功能函数以及存储标签
         $emailId = $_REQUEST['mailIds'];
         $userRead = $_REQUEST['userRead'];
         $userWrite = $_REQUEST['userWrite'];
-
+        $deadline=$_REQUEST['deadline'];
+        $labelId = $_POST['labelSelect'];
         $emailIdArray = explode(",",$emailId);
         $distributionModel = M('MailUser');
 
@@ -43,15 +44,21 @@ class DistributionController extends Controller{
                     $data['type'] = 1;
                     $data['status'] = 0;
                     $distributionModel->add($data);
-
-                    $receiveModel = M(ReceiveMails);
+                    $receiveModel = M('ReceiveMails');
                     $data = array();
                     $data['status'] = 1;
-
-                   $receiveModel->where('id='.$mailValue)->save($data);
+                    $data['deadline']=$deadline;
+                    if($labelId != 0)
+                    {
+                        $data['label_id'] = $labelId;
+                    }
+                    //var_dump($mailValue);
+                    $receiveModel->where('id='.$mailValue)->save($data);
                 }
             }
-           $this->redirect('Index/table');
+            //添加标签
+
+            $this->redirect('Index/table');
         }
     }
 }

@@ -4,45 +4,24 @@
     <meta charset="UTF-8">
     <title>后台管理系统</title>
     <link rel="stylesheet" href="__ROOT__/Public/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="__ROOT__/Public/css/kkkk.css"/>
+    <link rel="stylesheet" href="__ROOT__/Public/css/base.css"/>
     <link rel="stylesheet" href="__ROOT__/Public/css/edit.css"/>
     <script type="text/javascript" src="__ROOT__/Public/js/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="__ROOT__/Public/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="__ROOT__/Public/js/safe.js"></script>
+    <script type="text/javascript" src="__ROOT__/Public/js/base.js"></script>
 
 </head>
 <body>
-<div class="col-md-2 sidebar">
-    <ul class="navContainer">
-        <li  class="logo"><a href="__URL__/manager" style="text-decoration: none">后台管理系统</a></li>
-        <li class="normal" ><a href="__URL__/manager" style="text-decoration: none">员工列表</a></li>
-        <li  class="normal" ><a href="__URL__/mailSet" style="text-decoration: none">邮箱设置</a></li>
-    </ul>
-</div>
-<div class="head-body" >
-    <div class="rightHead">
-        <div class="right">
-            <a href="#">反馈建议</a> | <a href="__APP__/Home/Index/logout">退出</a>
-        </div>
-        <div class="input-box">
-            <input class="input"id="usernamea">
-            <button class="search-btn"><span class="glyphicon glyphicon-search"></span></button>
-        </div>
+<include file="Public:userbase"/>
+
+<div class="col-md-10 col-md-offset-2 email-box ">
+
+    <div class="email-box-head" style="width:100%;height:125px;">
+        <div style="height:50px;"></div>
+        <h3>员工资料编辑</h3>
+        <HR width="100%" color=gray SIZE=15 />
     </div>
-    <div class="leftHead">
-        <p><b id="username">用户名 </b><<span id="userAddress">123456@mail.com</span>><p>
-        <a href="#">邮箱首页</a> | <a href="#">设置</a>
-    </div>
-
-</div>
-
-<div class ="main-body"   >
-
-    <div class="">
-        <div class="col-md-2"></div>
-        <div class="col-md-10 email-box " >
-            <h2>员工资料编辑</h2>
-            <HR width="100%" color=gray SIZE=20 />
             <br>
 
             <form action="__APP__/Home/User/edit" method="post" id="editUserForm">
@@ -74,26 +53,28 @@
             <br>
             <div class="input-group">
                 <span class="input-group-addon" >角色</span>
-                <select name="authority" id="authority"><!--权限-->
+                <select name="authority" style="width:160px" class="form-control" id="authority"><!--权限-->
                     <volist name="role" id="row">
-                        <option value="{$row['id']}">{$row['name']}</option>
+                        <option <if condition="$user.role_id eq $row['id']">selected='selected'</if> value="{$row['id']}">{$row['name']}</option>
                     </volist>
                 </select>
 
             </div>
             <br>
-            <nav>
-                <ul class="pager">
-                    <li><a href="#" id="submitBtn">保存</a></li>
-                    <li><a href="manager.html">返回</a></li>
-                </ul>
-            </nav>
+                <div class="row">
+                    <ul class="col-md-offset-1 col-md-3 button-group" style="text-align: center">
+                        <li class="fun-button" style="margin-left: auto; margin-right: auto;" >
+
+                            <a id="saveButton" href="#" class="fun-a" style="font-size:15px;">保存</a><span class="fun-line"></span>
+                        </li>
+                        <li class="fun-button" >
+                            <a href='manager.html'class="fun-a" style="font-size:15px;">返回</a>
+                            <span class="fun-line"></span>
+
+                        </li>
+                    </ul>
+                </div>
             </form>
-        </div>
-
-
-
-    </div>
 </div>
 </body>
 <script >

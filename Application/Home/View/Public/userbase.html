@@ -1,0 +1,39 @@
+
+<div class="col-md-2 sidebar" style="">
+    <div class="sidebar-head" >
+
+        <img   style="height:125px" src="__ROOT__/Public/images/logo.png"   >
+        <!--<div class="search" >-->
+        <!--<input class="search-input" >-->
+        <!--<a class="search-icon" style="font-size:15px;"><span class="glyphicon glyphicon-search"  style="color:#666"></span></a>-->
+        <!--</div>-->
+
+    </div>
+    <div class="col-md-2 kind" >
+        <li  class="name"><?php echo $_SESSION['userName'];?></li>
+        <ul class="ul-role">
+            <li class="role">
+                <a class="role-icon"><span  class="glyphicon glyphicon-user"></span></a>
+                <a class="role-name"><?php echo $_SESSION['roleName'];?></a>
+                <span class="role-line"></span>
+            </li>
+            <li class="role" {:level(1)}>
+                <a class="role-icon"><span class="glyphicon glyphicon-pencil" ></span></span></a>
+                <a href="__APP__/Home/UserInformation/showInformation"class="role-name">个人信息</a>
+                <span class="role-line"></span>
+            </li>
+            <li class="role" {:level(2)}>
+                <a class="role-icon"><span  class="glyphicon glyphicon-remove"></span></a>
+                <a href="__APP__/Home/Index/logout" class="role-name">退出登陆</a>
+                <span class="role-line"></span>
+            </li>
+        </ul>
+
+        <ul class="ul-out">
+            <li {:level(3)}><a href='__APP__/Home/User/manager'id="edit">人员列表</a><span class="li-line"></span></li>
+            <li {:level(4)}><a href='__APP__/Home/User/set' id="inbox-all">邮箱设置</a><span class="li-line"></span></li>
+            <li {:level(5)}><a href='__APP__/Home/Index/statistics' id="">统计信息</a><span class="li-line"></span></li>
+            <li {:level(6)}><a href='__APP__/Home/Role/index' id="">角色管理</a><span class="li-line"></span></li>
+        </ul>
+    </div>
+</div>

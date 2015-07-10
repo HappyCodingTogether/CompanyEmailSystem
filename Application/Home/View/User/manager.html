@@ -4,57 +4,101 @@
     <meta charset="UTF-8">
     <title>后台管理系统</title>
     <link rel="stylesheet" href="__ROOT__/Public/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="__ROOT__/Public/css/kkkk.css"/>
+    <link rel="stylesheet" href="__ROOT__/Public/css/base.css"/>
     <link rel="stylesheet" href="__ROOT__/Public/css/manager.css"/>
+    <script type="text/javascript" src="__ROOT__/Public/js/safe.js"></script>
     <script type="text/javascript" src="__ROOT__/Public/js/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="__ROOT__/Public/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="__ROOT__/Public/js/safe.js"></script>
+    <script type="text/javascript" src="__ROOT__/Public/js/base.js"></script>
 
 </head>
+<!--弹窗选择分发给的人-->
 <body>
-<div class="col-md-2 sidebar">
-    <ul class="navContainer">
-        <li  class="logo"><a href="__URL__/manager" style="text-decoration: none">后台管理系统</a></li>
-        <li class="normal" ><a href="__URL__/manager" style="text-decoration: none">员工列表</a></li>
-        <li  class="normal" ><a href="__URL__/mailSet" style="text-decoration: none">邮箱设置</a></li>
-    </ul>
-</div>
-<div class="head-body" >
-    <div class="rightHead">
-        <div class="right">
-            <a href="#">反馈建议</a> | <a href="__APP__/Home/Index/logout">退出</a>
-        </div>
-        <div class="input-box">
-            <input class="input"id="usernamea">
-            <button class="search-btn"><span class="glyphicon glyphicon-search"></span></button>
-        </div>
-    </div>
-    <div class="leftHead">
-        <p><b id="username">用户名 </b><<span id="userAddress">123456@mail.com</span>><p>
-        <a href="#">邮箱首页</a> | <a href="#">设置</a>
-    </div>
+<include file="Public:userbase"/>
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="addpeople" style="">
+    <div class="modal-dialog ">
+        <div class="modal-content" id="content">
 
-</div>
 
-<div class ="main-body"   >
+            <div class="modal-header  " >
 
-    <div class="">
-        <div class="col-md-2"></div>
-        <div class="col-md-10 email-box " >
-            <div class="btn-group" role="group" aria-label="...">
-                <a href="add.html" type="button" class="btn btn-default">添加</a>
-                <button type="button" class="btn btn-default">删除</button>
+                <center><h2 class="modal-title">人员添加</h2></center>
+                </br>
             </div>
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-9">
+                    <form action="__URL__/addUser" method="post" id="addUserForm">
+                        <br>
+                        <br>
+                        <div class="input-group col-md-8">
+                            <span class="input-group-addon" > 用户名</span>
+                            <input type="text"required id="account" name="account"  class="form-control" placeholder="Account" aria-describedby="sizing-addon2">
+                        </div>
+                        <br>
+                        <div class="input-group col-md-8">
+                            <span class="input-group-addon" >真实姓名</span>
+                            <input type="text" required id="name" name="name" class="form-control" placeholder="Name" aria-describedby="sizing-addon2">
+                        </div>
+                        <br>
+                        <div class="input-group col-md-8">
+                            <span class="input-group-addon" >密码</span>
+                            <input type="text" required id="password" name="password"  class="form-control" placeholder="Password" aria-describedby="sizing-addon2">
+                        </div>
+                        <br>
+                        <div class="input-group col-md-8">
+                            <span class="input-group-addon" >角色</span>
+                            <select name="authority" class="form-control" id="authority"><!--权限-->
+                                <volist name="roleList" class="form-control" id="row">
+                                    <option value="{$row['id']}">{$row['name']}</option>
+                                </volist>
+                            </select>
+                        </div>
+                        <br>
+                        <div class="input-group col-md-8">
+                            <span class="input-group-addon" id="sizing-addon2">电话</span>
+                            <input type="text" required id="phone" name="phone" class="form-control" placeholder="Tel" aria-describedby="sizing-addon2">
+                        </div>
+                        <br>
+                        <div class="input-group col-md-8">
+                            <span class="input-group-addon" id="sizing-addon2">邮箱</span>
+                            <input type="text"required id="email" name="email" class="form-control" placeholder="Email" aria-describedby="sizing-addon2">
+                        </div>
+                        <br>
+                        <div class="modal-footer">
+                            <input type="submit" class="btn btn-primary">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--弹窗选择分发给的人-->
+
+
+
+<div class="col-md-10 col-md-offset-2 email-box ">
+
+    <div class="email-box-head" style="width:100%;height:125px;">
+
+        <div style="height:50px;"></div>
+            <div class="button-group" role="group" aria-label="...">
+                <li class="fun-button" onclick="addnewpeople()" ><a href='#'class="fun-a">添加</a><span class="fun-line"></span></li>
+                <li class="fun-button"><a href='#'class="fun-a" style="color:#66ff00">|</a></li>
+                <li class="fun-button"><a href='#'class="fun-a">删除</a><span class="fun-line"></span></li>
+            </div>
+    </div>
             <div class="table-responsive">
-                <table class="table table-hover table-striped">
+                <table class="table table-hover table-striped" style="table-layout:fixed;">
                     <thead>
-                    <tr>
-                        <th></th>
-                        <th>姓名</th>
-                        <th>邮箱地址</th>
-                        <th>电话</th>
-                        <th>身份</th>
-                        <th>编辑</th>
+                    <tr class="row table" >
+                        <th class="col-md-1"></th>
+                        <th class="col-md-2">姓名</th>
+                        <th class="col-md-4">邮箱地址</th>
+                        <th class="col-md-2">电话</th>
+                        <th class="col-md-2">身份</th>
+                        <th class="col-md-1">编辑</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -63,6 +107,7 @@
 
                     <volist name="userList" id="user">
                         <tr class="table-tr">
+                        <td></td>
                         <td><input type="checkbox" name="userIds" value="{$user.id}"></td>
                         <td>{$user.name}</td>
                         <td>{$user.email}</td>
@@ -79,17 +124,21 @@
                     </tbody>
                 </table>
             </div>
-            <nav>
-                <ul class="pager">
-                    <li><a href="#" onclick="prepage()">上一页</a></li>
-                    <li><a href="#" id="nextpage" data-value="{$pageNow}" onclick="nextpage()">下一页</a></li>
-                </ul>
-            </nav>
+    <div class="row">
+        <ul class="col-md-offset-5 col-md-3 button-group" style="text-align: center">
+            <li class="fun-button" style="margin-left: auto; margin-right: auto;" >
+                <a class="fun-icon"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                <a href='#'class="fun-a" style="font-size:15px;"onclick="prepage()">上一页</a><span class="fun-line"></span>
+            </li>
+            <li class="fun-button" >
+                <a href='#'class="fun-a" style="font-size:15px;" id="nextpage" data-value="{$pageNow}" onclick="nextpage()">下一页</a>
+                <a class="fun-icon"><span class="glyphicon glyphicon-chevron-right"></span></a><span class="fun-line"></span>
 
-        </div>
-
-
+            </li>
+        </ul>
     </div>
+
 </div>
+
 </body>
 </html>

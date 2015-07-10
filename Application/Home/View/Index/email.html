@@ -15,68 +15,72 @@
 
 <include file="Public:base"/>
 
-<div class ="main-body"   >
+<div class="col-md-10 col-md-offset-2 email-box ">
     <input type="hidden" id="role_id_hidden" value="{$_SESSION['roleId']}"/>
     <span id="emailListURL" hidden>__APP__/Home/EmailList/</span>
-    <div class="row">
-        <div class="col-md-2 "></div>
-        <div class="col-md-10 email-box "  >
-            <div class="button-group  row" style="margin-bottom:10px" >
-
-                <div class="btn-group  col-md-8" role="group" aria-label="..." style="">
-                    <button type="button" class="btn btn-default" id="return"><span class="glyphicon glyphicon-menu-left" ></span>返回</button>
-                    <button type="button" class="btn btn-default" id="reply">回复</button>
-                    <button type="button" class="btn btn-default">转发</button>
-                    <button type="button" class="btn btn-default">删除</button>
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            标记为
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">已读邮件</a></li>
-                            <li><a href="#">未读邮件</a></li>
-                        </ul>
-                    </div>
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            移动到
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">已发送</a></li>
-                            <li><a href="#">已删除</a></li>
-                            <li><a href="#">草稿箱</a></li>
-                        </ul>
-                    </div>
-
-                </div>
-                <div class="col-md-4 page">
-                    <div class="btn-group " role="group" aria-label="...">
-                        <button type="button" id="preEmail" class="btn btn-default">上一封</button>
-                        <button type="button" id="nextEmail" class="btn btn-default">下一封</button>
-
-                    </div>
-
-                </div>
-            </div>
-            <div class="related-email well well-sm"  >
-                <ul>
-                    <li  class="topic-email" ><lable><b id="email-title"></b></lable></li>
-                    <li><span class="forth" >发件人</span>: <span class="name"></span><<a id="email-from"></a>></li>
-                    <li><span class="forth" >时间</span>: <lable class="gray" id="email-date"></lable></li>
-                    <li><span class="forth">收件人</span>: <<span class="gray" id="email-to"></span>></li>
-                </ul>
-            </div>
-            <div id="email-content" class="content-email">
-
-            </div>
-
+    <span id="pass" hidden>__APP__/Home/Verify/</span>
+    <input type="hidden" id="dealURL" value="__APP__/Home/Mail/deal"/>
+    <input type="hidden" id="indexURL" value="__APP__/Home/Index/table"/>
+    <span id="firstId" hidden>{$firstId}</span>
+    <span id="lastId" hidden>{$lastId}</span>
+    <div class="email-box-head" style="width:100%;height:125px;">
+        <div style="height:50px;"></div>
+        <ul class="button-group">
+            <li class="fun-button"id="return">
+                <a class="fun-icon"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                <a href='#'class="fun-a" >返回</a><span class="fun-line"></span>
+            </li>
+            <li class="fun-button"><a href='#'class="fun-a" style="color:#66ff00">|</a></li>
+            <li class="fun-button" id="reply"><a href='#'class="fun-a" >回复</a><span class="fun-line"></span></li>
+            <li class="fun-button"><a href='#'class="fun-a" style="color:#66ff00">|</a></li>
+            <li class="fun-button" id="transmit"><a href='#'class="fun-a" >转发</a><span class="fun-line"></span></li>
+            <li class="fun-button" {:level(19)}><a href='#'class="fun-a" style="color:#66ff00">|</a></li>
+            <li class="fun-button" {:level(19)} id="dealButton"><a href='#'class="fun-a" >已处理</a><span class="fun-line"></span></li>
+            <li class="fun-button" {:level(18)}><a href='#'class="fun-a" style="color:#66ff00">|</a></li>
+            <li class="fun-button" value="12" {:level(18)}>
+                <a class="fun-icon"><span class="glyphicon glyphicon-triangle-right"></span></a>
+                <a href='#' class="fun-a" >审核</a>
+                <span class="fun-line"></span>
+            </li>
+            <li class="fun-select" id="12" {:level(18)}>
+                <a id="passMail" href='#' class="fun-select-a">通过</a>
+                <a id="backMail" href='#' class="fun-select-a">未通过</a>
+                <a id="editMail" href='#' class="fun-select-a">修改</a>
+            </li>
+            <li class="fun-button" {:level(17)}><a href='#'class="fun-a" style="color:#66ff00">|</a></li>
+            <li class="fun-button" {:level(17)}><a href='#'class="fun-a">分发</a><span class="fun-line"></span></li>
+        </ul>
+    </div>
+    <div class="email-box-body" style="width:100% ;">
+        <div class="related-email well well-sm"  >
+            <ul>
+                <li  class="topic-email" ><lable><b id="email-title"></b></lable></li>
+                <li><span class="forth" >发件人</span>: <span class="name"></span><<a id="email-from"></a>></li>
+                <li><span class="forth" >时间</span>: <lable class="gray" id="email-date"></lable></li>
+                <li><span class="forth">收件人</span>: <span class="gray" id="email-to"></span>;</li>
+                <li id="deadlineLi" style="display: none;"><span class="forth">时限</span>: <span class="gray" id="deadline" style="color: #cc0000"></span></li>
+            </ul>
+        </div>
+        <div id="email-content" class="content-email" style="min-height: 300px">
 
         </div>
+        <div id="attachment">
+        </div>
+        <div class="row">
+            <ul class="col-md-offset-5 col-md-3 button-group">
+                <li class="fun-button" >
+                    <a href='javascript:void(0);' class="fun-icon"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                    <a href='javascript:void(0);' id="preEmail"  class="fun-a" style="font-size:15px;">上一封</a><span class="fun-line"></span>
+                </li>
+                <li class="fun-button"  >
+                    <a href='javascript:void(0);' id="nextEmail" class="fun-a" style="font-size:15px;" >下一封</a>
+                    <a href='javascript:void(0);'  class="fun-icon"><span class="glyphicon glyphicon-chevron-right"></span></a><span class="fun-line"></span>
 
-
+                </li>
+            </ul>
         </div>
     </div>
+</div>
+
 </body>
 </html>

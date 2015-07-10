@@ -1,36 +1,128 @@
+<input type="hidden" value="__APP__/Home/Public/echoInfoLoad" id="infoURL"/>
+<div class="col-md-2 sidebar" style="">
+    <div class="sidebar-head" >
 
-<div class="col-md-2 sidebar">
-    <ul class="navContainer">
-        <li href="#" class="logo">邮件处理系统</li>
-        <li class="blank"></li>
-        <li href="#" class="large" id="edit"><span class="glyphicon glyphicon-pencil"></span>写信</li>
-        <li href="#" class="large" id="inbox"><span class="glyphicon glyphicon-envelope"></span>收信</li>
-        <li href="#" class="large" id="address-list"><span class="glyphicon glyphicon-user"></span>通讯录</li>
-        <li class="line"></li>
-        <li href="#" class="normal" >收件箱</li>
-        <li href="#" class="normal">草稿箱</li>
-        <li href="#" class="normal">已发送</li>
-        <li href="#" class="normal">已删除</li>
-        <li href="#" class="normal">垃圾箱</li>
-        <li href="#" class="normal">文件夹</li>
-        <li href="#" class="normal">待审核</li>
-    </ul>
-</div>
-<div class="head-body" >
-    <div class="col-md-2"></div>
-    <div class=" col-md-3 leftHead">
-        <p><b id="username"><?php echo $_SESSION['userName']?></b><p>
-        <a href="../Index/index.html">邮箱首页</a> | <a href="#">设置</a>
+            <img   style="height:125px" src="__ROOT__/Public/images/logo.png"   >
+            <!--<div class="search" >-->
+            <!--<input class="search-input" >-->
+            <!--<a class="search-icon" style="font-size:15px;"><span class="glyphicon glyphicon-search"  style="color:#666"></span></a>-->
+            <!--</div>-->
+
     </div>
-    <div class="rightHead">
-        <div class="right">
-            <a href="#">反馈建议</a> | <a href="__APP__/Home/Index/logout">退出</a>
-        </div>
-        <div class="input-box">
-            <input class="input"id="usernamea">
-            <button class="search-btn"><span class="glyphicon glyphicon-search"></span></button>
-        </div>
+    <div class="col-md-2 kind" >
+        <li  class="name"><?php echo $_SESSION['userName'];?></li>
+        <ul class="ul-role">
+            <li class="role">
+                <a class="role-icon"><span  class="glyphicon glyphicon-user"></span></a>
+                <a class="role-name"><?php echo $_SESSION['roleName'];?></a>
+                <span class="role-line"></span>
+            </li>
+            <li class="role" {:level(1)}>
+                <a class="role-icon"><span class="glyphicon glyphicon-pencil" ></span></span></a>
+                <a href="__APP__/Home/UserInformation/showInformation" class="role-name">个人信息</a>
+                <span class="role-line"></span>
+            </li>
+            <li class="role" {:level(2)}>
+                <a class="role-icon"><span  class="glyphicon glyphicon-remove"></span></a>
+                <a href="__APP__/Home/Index/logout" class="role-name">退出登录</a>
+                <span class="role-line"></span>
+            </li>
+        </ul>
+
+        <ul class="ul-out">
+            <li><a href='__APP__/Home/Index/index'>首页</a><span class="li-line"></span></li>
+            <li {:level(7)}><a href='__APP__/Home/Index/edit' id="edit">发件</a><span class="li-line"></span></li>
+            <li><a href='#' id="inbox-all">收件箱</a><span class="li-line"></span></li>
+            <ul class="ul-in"id="inbox-ul" >
+                <li class="li-in" id="inbox" {:level(8)}><a href='__APP__/Home/Index/table?type=all'>全部</a></li>
+                <li class="li-in" {:level(9)}><a href='__APP__/Home/Index/table?type=isdeal'>已处理</a></li>
+                <li class="li-in" {:level(10)}><a href='__APP__/Home/Index/table?type=notdeal'>未处理</a></li>
+                <li class="li-in" {:level(11)}><a href='__APP__/Home/Index/table?type=isverify'>已审核</a></li>
+                <li class="li-in" {:level(12)}><a href='__APP__/Home/Index/table?type=notverify'>未审核</a></li>
+                <li class="li-in" {:level(13)}><a href='__APP__/Home/Index/table?type=isdb'>已分发</a></li>
+                <li class="li-in" {:level(14)}><a href='__APP__/Home/Index/table?type=notdb'>未分发</a></li>
+            </ul>
+            <li><a href='#' id="files">文件夹</a><span class="li-line"></span></li>
+            <ul class="ul-in"id="files-ul" >
+                <li class="li-in" {:level(20)}><a href='__APP__/Home/Index/table?type=issend'>已发送</a></li>
+                <li class="li-in" {:level(15)}><a href='__APP__/Home/Index/table?type=verifying'>待审核</a></li>
+                <li class="li-in" {:level(16)}><a href='__APP__/Home/Index/table?type=fail'>未通过</a></li>
+            </ul>
+            <li><a href='__APP__/Home/Index/statistics'id="address-list">统计</a><span class="li-line"></span></li>
+        </ul>
+    </div>
+</div>
+<div class="notify-box well well-sm" id="infoDiv" style="display:none;">
+    <div  style="height:20px;">
+        <label style="padding-left:5px;padding-top:5px;">通知</label>
+        <button type="button" id="notify-close" class="close" data-dismiss="notify-box" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    </div>
+    <div  style="padding: 5px;" id="newMailDiv" style="display:none">
+        <p style="margin-bottom: 0px;" id="newMail"></p>
     </div>
 
+    <div  style="padding: 5px;" id="deadlineMailDiv" style="display:none">
+        <p style="margin-bottom: 0px;" id="deadlineMail"></p>
+    </div>
 
+    <div  style="padding: 5px;" id="verifyMailDiv" style="display:none">
+        <p style="margin-bottom: 0px;" id="verifyMail"></p>
+    </div>
+    <div  style="padding: 5px;" id="distributeMailDiv" style="display:none">
+        <p style="margin-bottom: 0px;" id="distributeMail"></p>
+    </div>
 </div>
+<script type="text/javascript">
+    $("#notify-close").click(function(){
+        sessionStorage.isclick=1;
+    });
+    $(document).ready(function(){
+        infoLoad(1);
+    });
+    var int=self.setInterval("infoLoad(0)",20000);
+    function infoLoad(status){
+        var url=$("#infoURL").val();
+
+        $.post(url,0,function(answer){
+
+            if(status==0){
+                sessionStorage.isclick=0;
+            }
+            var check=0;
+            if(answer['newMail']!=0){
+                $("#newMail").html("你有"+answer['newMail']+"封新的邮件，请注意查收");
+                check=1;
+            }else{
+                $("#newMailDiv").attr('style','display:none');
+            }
+            if(answer['deadlineMail']!=0){
+                $("#deadlineMail").html("你有"+answer['deadlineMail']+"封即将过期的邮件，请注意查收");
+                check=1;
+            }else{
+                $("#deadlineMailDiv").attr('style','display:none');
+            }
+            if(answer['distributeMail']!=0){
+                //alert(document.getElementById("distributeMail").innerHTML);
+                $("#distributeMail").html("你有"+answer['distributeMail']+"封待分发的邮件，请注意查收");
+                check=1;
+            }else{
+                $("#distributeMailDiv").attr('style','display:none');
+            }
+            if(answer['verifyMail']!=0){
+                $("#verifyMail").html("你有"+answer['verifyMail']+"封待审核的邮件，请注意查收");
+            }else{
+                $("#verifyMailDiv").attr('style','display:none');
+            }
+
+            if(check==0){
+                $("#infoDiv").attr('style','display:none');
+            }else if(check==1&&sessionStorage.isclick==0){
+                $("#infoDiv").attr('style','display:block');
+                setTimeout(function(){
+                    $("#infoDiv").attr('style','display:none');
+                },5000);
+            }
+
+        },'json');
+    }
+</script>

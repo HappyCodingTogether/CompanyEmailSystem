@@ -1,33 +1,10 @@
-body{
-    font-family: "Microsoft YaHei","微软雅黑","宋体",Arial,Verdana,sans-serif;
+
+
+.table-tr td{
+    word-break:keep-all;/* 不换行 */
+    white-space:nowrap;/* 不换行 */
+    overflow:hidden;/* 内容超出宽度时隐藏超出部分的内容 */
+    text-overflow:ellipsis;/* 当对象内文本溢出时显示省略标记(...) ；需与overflow:hidden;一起使用。*/
 }
 
 
-.main-body .button-group{
-    margin-top:20px;
-    margin-left:20px;
-    margin-bottom:20px;
-}
-.main-body .button-group .page{
-    padding-left:160px;
-}
-.main-body .button-group .button-circle{
-    -moz-border-radius: 50%;
-    -webkit-border-radius: 50%;
-    background: #ffffff;
-    
-}
-.main-body{
-
-    overflow-y:auto;
-    overflow-x:hidden;
-}
-
-.main-body .mail-title{
-
-    text-overflow:ellipsis;
-
-    white-space:nowrap;
-
-    overflow:hidden;
-}

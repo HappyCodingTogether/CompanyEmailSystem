@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <meta charset="UTF-8">
+    <title>后台管理系统</title>
+    <link rel="stylesheet" href="__ROOT__/Public/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="__ROOT__/Public/css/base.css"/>
+    <link rel="stylesheet" href="__ROOT__/Public/css/manager.css"/>
+    <script type="text/javascript" src="__ROOT__/Public/js/safe.js"></script>
+    <script type="text/javascript" src="__ROOT__/Public/js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="__ROOT__/Public/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__ROOT__/Public/js/base.js"></script>
+
+</head>
+<!--弹窗选择分发给的人-->
+<body>
+<include file="Public:userbase"/>
+
+<div class="col-md-10 col-md-offset-2 email-box ">
+
+    <div class="email-box-head" style="width:100%;height:125px;">
+        <div style="height:50px;"></div>
+        <h3>角色编辑</h3>
+        <HR width="100%" color=gray SIZE=15 />
+    </div>
+    <br>
+
+    <form action="__APP__/Home/Role/insert" method="post" id="addRoleForm">
+        <div class="input-group">
+            <span class="input-group-addon" >角色名称</span>
+            <input name="role_name" type="text" style="width: 160px"  class="form-control"  aria-describedby="sizing-addon2" value="">
+        </div>
+        <br>
+
+        <div class="input-group">
+            <div class="input-group" style="float: left;width: 50%">
+                <div style="width:50%;">
+                    <p class="input-group-addon" >左侧节点权限</p>
+                </div>
+                <div>
+                    <volist name="node1List" id="node1">
+                        <li>
+                            <input type="checkbox" name="nodes[]" value="{$node1['id']}" />
+                            <span>{$node1['name']}</span>
+                        </li>
+                    </volist>
+                </div>
+
+            </div>
+            <div class="input-group" style="float: left;width: 50%">
+                <div style="width:50%;">
+                    <p class="input-group-addon" >按钮权限</p>
+                </div>
+                <div>
+                    <volist name="node2List" id="node2">
+                        <li>
+                            <input type="checkbox" name="nodes[]" value="{$node2['id']}"/>
+                            <span>{$node2['name']}</span>
+                        </li>
+                    </volist>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="row">
+            <ul class="col-md-offset-1 col-md-3 button-group" style="text-align: center">
+                <li class="fun-button" style="margin-left: auto; margin-right: auto;" >
+
+                    <a id="submitBtn" class="fun-a" style="font-size:15px;">保存</a><span class="fun-line"></span>
+                </li>
+                <li class="fun-button" >
+                    <a href='__APP__/Home/Role/index'class="fun-a" style="font-size:15px;">返回</a>
+                    <span class="fun-line"></span>
+
+                </li>
+            </ul>
+        </div>
+    </form>
+</div>
+</body>
+<script >
+
+    $("#submitBtn").click(function(){
+        $("#addRoleForm").submit();
+    });
+
+</script>
+</html>

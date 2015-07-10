@@ -50,12 +50,15 @@ class UserController extends Controller{
         }
 
         foreach($userList as $key=>$item){
-           $userList[$key]["role_name"]=$role[$item['role_id']]['name'];
+            $userList[$key]["role_name"]=$role[$item['role_id']]['name'];
         }
         //var_dump($userList);
         $this->assign("userCount",count($userList));
         $this->assign("pageNow",$page);
         $this->assign("userList",$userList);
+
+        $this->assign('roleList',$roleList);
+
         $this->display();
     }
     public  function editor(){
@@ -68,8 +71,11 @@ class UserController extends Controller{
         $this->assign("user",$user);
         $this->display();
     }
-    public function mailSet(){
-        $this->display('set');
+    public function set(){
+        $mailAccountModel = M('Mail_account');
+        $mailAccount = $mailAccountModel->find();
+        $this->assign("mailAccount",$mailAccount);
+        $this->display();
     }
     public function edit(){
         $userID=$_REQUEST['userID'];
@@ -91,5 +97,31 @@ class UserController extends Controller{
         $userModel->where("id=".$userID)->save($data);
 
         $this->redirect('manager');
+    }
+    public function updateInfo(){
+        $address=I('emailAddress');
+
+        $emailName=I('emailName');
+        $popserver=I('popserver');
+        $stmpserver=I('stmpserver');
+        $user=I('user');
+        $pwd=I('pwd');
+        $day=I('receiveday');
+        $account=M("mail_account");
+        // var_dump($popserver);
+        $data['emailAddress']=$address;
+        $data['emailName']=$emailName;
+        $data['pop3Server']=$popserver;
+        $data['stmpServer']=$stmpserver;
+        $data['emailUserName']=$user;
+        $data['emailPassword']=$pwd;
+        $data['receiveday']=$day;
+        //var_dump($data);
+        $abc=$account->where('id=1')->save($data);
+        if ($abc==1) {
+            $this->success("修改成功");
+        } else {
+            $this->error('错误');
+        }
     }
 }

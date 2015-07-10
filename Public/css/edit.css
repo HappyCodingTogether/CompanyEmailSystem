@@ -27,3 +27,53 @@
 
 }
 #editor {overflow:scroll; height:300px}
+
+
+
+
+
+
+/*a  upload */
+.a-upload {
+    height: 30px;
+    line-height: 30px;
+    position: relative;
+    cursor: pointer;
+    color: #888;
+    overflow: hidden;
+    display: inline-block;
+    *display: inline;
+    *zoom: 1
+}
+.a-upload .brow{
+    color: #444;
+    background: #eee;
+    border-color: #ccc;
+    text-decoration: none;
+    border-radius: 4px;
+
+}
+.a-upload  input {
+    position: absolute;
+    right: 0;
+    top: 0;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    cursor: pointer
+}
+
+#file-ul  .remove-icon{
+    height: 30px;
+    margin-left:10px;
+    line-height: 30px;
+    position: relative;
+    cursor: pointer;
+    color: #cc0000;
+    overflow: hidden;
+    display: inline-block;
+    *display: inline;
+    *zoom: 1
+}
+#file-ul  .remove :hover{ color:#cc0000; text-decoration:none;}
+
+.modal-backdrop {display:none;}

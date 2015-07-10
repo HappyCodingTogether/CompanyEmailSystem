@@ -14,140 +14,173 @@
     <link href="__ROOT__/Public/css/umeditor.css" type="text/css" rel="stylesheet">
     <script type="text/javascript" src="__ROOT__/Public/js/edit.js"></script>
     <script type="text/javascript" src="__ROOT__/Public/js/base.js"></script>
-
-
-
+    <script src="__ROOT__/Public/js/vendor/jquery.ui.widget.js"></script>
+    <script src="__ROOT__/Public/js/jquery.iframe-transport.js"></script>
+    <script src="__ROOT__/Public/js/jquery.fileupload.js"></script>
 
 </head>
 <body>
 
 <include file="Public:base"/>
 
-<div class ="main-body"   >
+<div class="col-md-10 col-md-offset-2 email-box ">
     <input type="hidden" id="role_id_hidden" value="{$_SESSION['roleId']}"/>
-    <div class="">
-        <div class="col-md-2"></div>
-        <div class="col-md-10 email-box " >
-            <div class="button-group">
-                <button type="button" class="btn btn-warning " id="sendButtonTop" style="background: #ff8000;margin-right:20px;width:100px;">发送</button>
-                <button type="button" class="btn btn-default" data-toggle="modal" data-target=".bs-example-modal-lg" >提交审核</button>
-                <button type="button" class="btn btn-default" id="22">存草稿</button>
-                <button type="button" class="btn btn-default" id="cancel">取消</button>
-            </div>
-            <div class=" well well-sm " style="margin:10px 0 0 0 ">
-                <div class="email-relation  col-md-10" style="padding-right:0px;">
+    <span id="emailListURL" hidden>__APP__/Home/EmailList/</span>
+    <div class="email-box-head" style="width:100%;height:125px;">
+        <div style="height:50px;"></div>
 
-                    <form class="form-horizontal" id="mailInfo" method="post" action="">
-                        <div class="form-group" style="display: none">
-                            <label for="inputEmail" class="col-sm-1 control-label" >发件人</label>
-                            <div class="col-sm-10">
-                                <input type="text" readonly id="inputEmail" style="margin-top:5px;" class="form-control" name="from"/>
-
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputEmail1" class="col-sm-1 control-label" >收件人</label>
-                            <div class="col-sm-10">
-                                <input type="email" class="form-control" id="inputEmail1" placeholder="输入对方的邮箱" name="to">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputPassword2" class="col-sm-1 control-label" >主题</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputPassword2" placeholder="输入邮件主题" name="title">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="myEditor" class="col-sm-1 control-label" >正文</label>
-                            <div class="col-sm-10">
-                                <input id="emailContent" name="emailContent" value="" hidden="hidden">
-                                <script  type="text/plain" id="myEditor" style="height:300px ;width:100%" name="content">
-
-                                </script>
-                                <div id="divtest" style="display: none;">
-                                </div>
-
-                            </div>
-                        </div>
-
-
-                        <div id="test" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-                            <div class="modal-dialog modal-lg" style="height: 50%">
-                                <div class="modal-content" style="height:100%;">
-
-                                    <div class="modal-header  " >
-
-                                        <h4 class="modal-title col-md-6 ">选择邮件审核人员</h4>
-                                        </br>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="col-md-6">
-                                            <volist name="userList" id="vo">
-                                                <input type="radio" name="verify_user" value="{$vo.id}" id="{$vo.id}write">
-                                                <label for="{$vo.id}write" >{$vo['name']}({$vo.account})</label>
-                                                <br/>
-                                            </volist>
-                                        </div>
-                                        <br style="clear:both;" />
-                                    </div>
-
-                                    <span id="verifyURL" hidden>__APP__/Home/Verify/verify</span>
-                                    <span id="sendURL" hidden>__APP__/Home/Mail/sendMail</span>
-                                    <input type="hidden" id="mail_id" name="mail_id" value=""/>
-                                    <div class="modal-footer">
-                                        <input type="submit" id="verifyButton" class="btn btn-primary">
-                                    </div>
-
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </form>
+        <ul class="button-group">
+            <li class="fun-button"id="sendButtonTop">
+                <a id="sendMailBtn" href='#'class="fun-a" >发送</a><span class="fun-line"></span>
+            </li>
+            <li class="fun-button" {:level(21)}><a href='#'class="fun-a" style="color:#66ff00">|</a></li>
+            <li class="fun-button" {:level(21)} id="" data-toggle="modal" data-target=".bs-example-modal-lg"><a href='#'class="fun-a" >提交审核</a><span class="fun-line"></span></li>
+            <li class="fun-button"><a href='#'class="fun-a" style="color:#66ff00">|</a></li>
+            <li class="fun-button" id="cancel"><a href='#'class="fun-a">取消</a><span class="fun-line"></span></li>
+        </ul>
+    </div>
+    <div class="email-box-body" style="width:100% ;">
+        <form class="form-horizontal" id="mailInfo" method="post" enctype="multipart/form-data" action="">
+            <div class="form-group" style="display: none">
+                <label for="inputEmail" class="col-sm-1 control-label" >发件人</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly id="inputEmail" style="margin-top:5px;" class="form-control" name="from"/>
                 </div>
-                <div class="address-list col-md-2  ">
-                    <div class="list-group">
-                        <button type="button" class="list-group-item disabled">通讯录</button>
-                        <button type="button" class="list-group-item">Dapin</button>
-                        <button type="button" class="list-group-item">Morsus</button>
-                        <button type="button" class="list-group-item">Portnsectc</button>
-                        <button type="button" class="list-group-item">Vestibuls</button>
-                        <button type="button" class="list-group-item">Portnsectc</button>
-                        <button type="button" class="list-group-item">Vestibuls</button>
-                        <button type="button" class="list-group-item">Portnsectc</button>
-                        <button type="button" class="list-group-item">Vestibuls</button>
-                        <button type="button" class="list-group-item">Portnsectc</button>
-                        <button type="button" class="list-group-item">Portnsectc</button>
-                        <button type="button" class="list-group-item">Portnsectc</button>
-                        <button type="button" class="list-group-item">Portnsectc</button>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail1" class="col-sm-1 control-label" >收件人</label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="inputEmail1" placeholder="输入对方的邮箱" name="to">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword2" class="col-sm-1 control-label" >主题</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputPassword2" placeholder="输入邮件主题" name="title">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword2" class="col-sm-1 control-label" >附件</label>
+                <div class="col-sm-10">
+                    <input type="button" class="btn btn-success" value="添加附件" id="addfiles" >
+                </div>
+            </div>
+
+            <div class="form-group" id="fujian"  style="display:none;">
+                <label for="inputPassword2" class="col-sm-1 control-label" >已添加</label>
+
+                <div class="col-sm-10" >
+                    <ul id="file-ul">
+
+                        <li class="file-li" id="li1" style="display:none">
+                            <a href='#'class="a-upload" ><input type="file" id="file1" name="file1" class="file-id" src="1"/><span class="brow">浏览</span><span id="filename1"></span></a>
+                            <a class="remove-icon" src="1" ><span class="glyphicon glyphicon-remove"></span></a>
+                        </li>
+                        <li class="file-li" id="li2" style="display:none">
+                            <a href='#'class="a-upload" ><input type="file" id="file2" name="file2" class="file-id" src="2"/><span class="brow">浏览</span><span id="filename2"></span></a>
+                            <a class="remove-icon" src="2" ><span class="glyphicon glyphicon-remove"></span></a>
+                        </li>
+                        <li class="file-li"  id="li3" style="display:none">
+                            <a href='#'class="a-upload" ><input type="file" id="file3" name="file3" class="file-id" src="3"/><span class="brow">浏览</span><span id="filename3"></span></a>
+                            <a class="remove-icon"  src="3"><span class="glyphicon glyphicon-remove"></span></a>
+                        </li>
+                        <li class="file-li" id="li4" style="display:none">
+                            <a href='#'class="a-upload" ><input type="file" id="file4" name="file4" class="file-id" src="4"/><span class="brow">浏览</span><span id="filename4"></span></a>
+                            <a class="remove-icon"  src="4"><span class="glyphicon glyphicon-remove"></span></a>
+                        </li>
+                        <li class="file-li" id="li5" style="display:none">
+                            <a href='#'class="a-upload" ><input type="file" id="file5" name="file5" class="file-id" src="5"/><span class="brow">浏览</span><span id="filename5"></span></a>
+                            <a class="remove-icon"  src="5"><span class="glyphicon glyphicon-remove"></span></a>
+                        </li>
 
 
+
+                    </ul>
+                </div>
+
+            </div>
+
+
+
+
+
+            <div class="form-group">
+                <label for="myEditor" class="col-sm-1 control-label" >正文</label>
+                <div class="col-sm-10">
+                    <input id="emailContent" name="emailContent" value="" hidden="hidden">
+                    <script id="myEditor" type="text/plain" style="width:100%;height:300px;">
+
+                    </script>
+
+                </div>
+            </div>
+
+
+            <div id="test" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                <div class="modal-dialog modal-lg" style="height: 50%">
+                    <div class="modal-content" style="height:100%;">
+
+                        <div class="modal-header  " >
+
+                            <h4 class="modal-title col-md-6 ">选择邮件审核人员</h4>
+                            </br>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-md-6">
+                                <volist name="userList" id="vo">
+                                    <input type="radio" name="verify_user" value="{$vo.id}" id="{$vo.id}write">
+                                    <label for="{$vo.id}write" >{$vo['name']}({$vo.account})</label>
+                                    <br/>
+                                </volist>
+                            </div>
+                            <br style="clear:both;" />
+                        </div>
+
+                        <span id="verifyURL" hidden>__APP__/Home/Verify/verify</span>
+                        <span id="sendURL" hidden>__APP__/Home/Mail/sendMail</span>
+                        <span id="backmail" hidden>__APP__/Home/Verify/backmail</span>
+                        <input type="hidden" id="mail_id" name="mail_id" value=""/>
+                        <div class="modal-footer">
+                            <input type="button" id="verifyButton"  value="提交" class="btn btn-primary">
+                        </div>
                     </div>
                 </div>
-
-                <div class="button-group" >
-                    <button type="button" class="btn btn-warning " style="background: #ff8000;margin-right:20px;width:100px; margin-left:90px;" id="sendButton">发送</button>
-                    <button type="button" class="btn btn-default">取消</button>
-                </div>
             </div>
-
-        </div>
-
-
+        </form>
     </div>
 </div>
 
 
+                <!--<div class="address-list col-md-2  ">-->
+                    <!--<div class="list-group">-->
+                        <!--<button type="button" class="list-group-item disabled">通讯录</button>-->
+                        <!--<button type="button" class="list-group-item">Dapin</button>-->
+                        <!--<button type="button" class="list-group-item">Morsus</button>-->
+                        <!--<button type="button" class="list-group-item">Portnsectc</button>-->
+                        <!--<button type="button" class="list-group-item">Vestibuls</button>-->
+                        <!--<button type="button" class="list-group-item">Portnsectc</button>-->
+                        <!--<button type="button" class="list-group-item">Vestibuls</button>-->
+                        <!--<button type="button" class="list-group-item">Portnsectc</button>-->
+                        <!--<button type="button" class="list-group-item">Vestibuls</button>-->
+                        <!--<button type="button" class="list-group-item">Portnsectc</button>-->
+                        <!--<button type="button" class="list-group-item">Portnsectc</button>-->
+                        <!--<button type="button" class="list-group-item">Portnsectc</button>-->
+                        <!--<button type="button" class="list-group-item">Portnsectc</button>-->
 
 
+                    <!--</div>-->
+                <!--</div>-->
+
+
+
+
+
+
+
+</body>
 <script type="text/javascript" src="__ROOT__/Public/umeditor.config.js"></script>
 <!-- 编辑器源码文件 -->
 <script type="text/javascript" src="__ROOT__/Public/umeditor.js"></script>
 <script type="text/javascript" src="__ROOT__/Public/umeditor.min.js"></script>
-<!-- 实例化编辑器 -->
-<script type="text/javascript">
 
-</script>
-
-</body>
 </html>

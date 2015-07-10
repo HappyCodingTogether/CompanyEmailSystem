@@ -3,8 +3,8 @@
  */
 
 var alength;
+var pagenum=1;
 function prepage(){
-    var pagenum=$("#nextpage").attr('data-value');
     pagenum--;
     if(pagenum>0)
     {
@@ -13,40 +13,64 @@ function prepage(){
         pagenum=1;
         getpage(pagenum);
     }
-    $("#nextpage").attr('data-value',pagenum);
 }
 function nextpage(){
-    var pagenum=$("#nextpage").attr('data-value');
     if(alength==10){
         pagenum++;
     }
-    $("#nextpage").attr('data-value',pagenum);
     getpage(pagenum);
-
+}
+function getPar(par){
+    //获取当前URL
+    var local_url = document.location.href;
+    //获取要取得的get参数位置
+    var get = local_url.indexOf(par +"=");
+    if(get == -1){
+        return false;
+    }
+    //截取字符串
+    var get_par = local_url.slice(par.length + get + 1);
+    //判断截取后的字符串是否还有其他get参数
+    var nextPar = get_par.indexOf("&");
+    if(nextPar != -1){
+        get_par = get_par.slice(0, nextPar);
+    }
+    return get_par;
 }
 
 function receiveNewMail(){
+    var type=getPar("type");
+    if(!type){
+        type='all';
+    }
     var url=$("#emailListURL").html();
-
     $.ajax({
         url: url+"receiveNewMail",
         type: 'POST',
         asyns: false,
         datatype: 'json',
-        data:{},
+        data:{type:type},
         success:function(data){
             var adata = eval(data);//处理json数组
             alength = adata.length;
 
             var html = "";
             for(var a=0; a<alength; a++){
+                var flag='';
+                var file='';
+                if(adata[a]['deadline']!=null&&adata['deadline']!=''){
+                    flag="<span class='glyphicon glyphicon-time' style='color: #cc0000'></span>";
+                }
+                if(adata[a]['add_file']!=''&&adata[a]['add_file']!=null){
+                    file="<span class='glyphicon glyphicon-paperclip' ></span>"
+                }
                 var unixTimestamp=adata[a]["createtime"]*1000;
 
                 html = html +"<tr class='row table-tr'><td class='col-lg-1'><input type='checkbox' name='emailId' value='"+adata[a]["id"]+"' ></td>";
-                html=html+"<td onclick='detail(this)' class='col-lg-1' value='"+adata[a]["id"]+"'>"+"标签"+"</td>";
+                html=html+"<td onclick='detail(this)' class='col-lg-2' value='"+adata[a]["id"]+"'>"+flag+adata[a]['label_id']+file+"</td>";
                 html=html+"<td onclick='detail(this)' class='col-lg-3' value='"+adata[a]["id"]+"'>"+adata[a]["from"]+"</td>";
                 html=html+"<td onclick='detail(this)' class='col-lg-5 mail-title' value='"+adata[a]["id"]+"'>"+adata[a]["title"]+"</td>";
-                html=html+"<td onclick='detail(this)' class='col-lg-3' value='"+adata[a]["id"]+"'>"+format(unixTimestamp, 'yyyy-MM-dd HH:mm:ss')+"</td></tr>";
+                html=html+"<td onclick='detail(this)' class='col-lg-2' value='"+adata[a]["id"]+"'>"+format(unixTimestamp, 'yyyy-MM-dd HH:mm')+"</td></tr>";
             }
             document.getElementById("alist").innerHTML = html;
 
@@ -55,26 +79,38 @@ function receiveNewMail(){
     })
 }
 function getpage(pagenum) {
+    var type=getPar("type");
+    if(!type){
+        type='all';
+    }
     var url=$("#emailListURL").html();
     $.ajax({
         url: url+"getEmailList",
         type: 'POST',
         asyns: false,
         datatype: 'json',
-        data:{page:pagenum},
+        data:{page:pagenum,type:type},
         success:function(data){
             var adata = eval(data);//处理json数组
             alength = adata.length;
 
             var html = "";
             for(var a=0; a<alength; a++){
+                var flag='';
+                var file='';
+                if(adata[a]['deadline']!=null&&adata['deadline']!=''){
+                    flag="<span class='glyphicon glyphicon-time' style='color: #cc0000'></span>";
+                }
+                if(adata[a]['add_file']!=''&&adata[a]['add_file']!=null){
+                    file="<span class='glyphicon glyphicon-paperclip' ></span>";
+                }
                 var unixTimestamp=adata[a]["createtime"]*1000;
 
               html = html +"<tr class='row table-tr'><td class='col-lg-1'><input type='checkbox' name='emailId' value='"+adata[a]["id"]+"'></td>";
-              html=html+"<td onclick='detail(this)' class='col-lg-1' value='"+adata[a]["id"]+"'>"+"标签"+"</td>";
+              html=html+"<td onclick='detail(this)' class='col-lg-2' value='"+adata[a]["id"]+"'>"+flag+adata[a]['label_id']+file+"</td>";
                html=html+"<td onclick='detail(this)' class='col-lg-3' value='"+adata[a]["id"]+"'>"+adata[a]["from"]+"</td>";
               html=html+"<td onclick='detail(this)'  class='col-lg-5 mail-title' value='"+adata[a]["id"]+"'>"+adata[a]["title"]+"</td>";
-                html=html+"<td onclick='detail(this)' class='col-lg-3' value='"+adata[a]["id"]+"'>"+format(unixTimestamp, 'yyyy-MM-dd HH:mm:ss')+"</td></tr>";
+                html=html+"<td onclick='detail(this)' class='col-lg-2' value='"+adata[a]["id"]+"'>"+format(unixTimestamp, 'yyyy-MM-dd HH:mm')+"</td></tr>";
            }
             document.getElementById("alist").innerHTML = html;
 
@@ -116,6 +152,7 @@ var format = function(time, format){
     })
 }
 function transferEmailId(){  //向“分发”按钮弹出页面传入选择的email的id
+    $('#mymodal').modal('show');
     var array = new Array();
     var id = document.getElementsByName("emailId");
     var length = id.length;
@@ -131,8 +168,20 @@ function transferEmailId(){  //向“分发”按钮弹出页面传入选择的e
     $("#mailIds").attr('value',str);
 
 }
+$(function(){
+    $("#refresh").click(function(){
+        receiveNewMail();
+    });
+});
+function myInterval()
+{
+    receiveNewMail();
+}
 $(document).ready(function(){
-   receiveNewMail();
+    //receiveNewMail();
+    getpage(pagenum);
+    setInterval("myInterval()",10000);//1000为1秒钟
+
 });
 
 

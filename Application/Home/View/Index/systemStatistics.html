@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <meta charset="UTF-8">
+    <title>邮件处理系统</title>
+    <link rel="stylesheet" href="__ROOT__/Public/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="__ROOT__/Public/css/base.css"/>
+    <script type="text/javascript" src="__ROOT__/Public/js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="__ROOT__/Public/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__ROOT__/Public/js/statistics.js"></script>
+    <script type="text/javascript" src="__ROOT__/Public/js/base.js"></script>
+    <script type="text/javascript" src="__ROOT__/Public/js/Chart.js"></script>
+    <script type="text/css">
+        .graph-ul{margin-top:20px;}
+    </script>
+</head>
+<body>
+
+<include file="Public:userbase"/>
+
+<div class="col-md-10 col-md-offset-2 email-box ">
+    <div class="email-box-head" style="width:100%;height:125px;">
+        <div style="height:50px;"></div>
+
+    </div>
+    <div class="email-box-body" style="width:100% ;text-align:center ">
+        <div class ="doughnut col-md-4  "style="padding-top:40px;" >
+
+            <canvas id="chart-area" width="400" height="400"></canvas>
+            <span id="roleId" hidden="hidden"><?php echo $_SESSION['roleId'];?></span>
+            <ul   class="graph-ul" style="" >
+
+                <li  style="float:left;list-style:none; font-size:18px; margin-left:20px;"><span style="  height:19px; background: #F7464A;padding-left:40px;"></span>已分发：<a style="" id='distributionNumber'>{$distributionNumber}</a></li>
+                <li  style="float:left;list-style:none; font-size:18px;margin-left:20px;" ><span style="  height:19px; background:#46BFBD;padding-left:40px;"></span>未分发：<a style="" id='notDistributionNumber'>{$notDistributionNumber}</a></li>
+                <li  style="float:left;list-style:none; font-size:18px;margin-left:20px;" ><span style="  height:19px; background: #FDB45C;padding-left:40px;"></span>已处理：<a style="" id='dealNumber'>{$dealNumber}</a></li>
+                <li  style="float:left;list-style:none; font-size:18px;margin-left:20px;" ><span style="  height:19px; background: #4D5360;padding-left:40px;"></span>未处理：<a style="" id='notDealNumber'>{$notDealNumber}</a></li>
+                <li style="float:left;list-style:none; font-size:18px;margin-left:20px;" ><span style="  height:19px; background: #F7464A;padding-left:40px;"></span>已发送：<a style="" id='send'>{$send}</a></li>
+                <li  style="float:left;list-style:none; font-size:18px;margin-left:20px;" ><span style="  height:19px; background: #FDB45C;padding-left:40px;"></span>未发送：<a style="" id="notSend">{$notSend}</a></li>
+                <li style="float:left;list-style:none; font-size:18px;margin-left:20px;" ><span style="  height:19px; background: #46BFBD;padding-left:40px;"></span>待审核：<a style="" id='waitForCheck'>{$waitForCheck}</a></li>
+                <li style="float:left;list-style:none; font-size:18px;margin-left:20px;" ><span style="  height:19px; background: #FDB45C;padding-left:40px;"></span>未通过：<a style="" id='fail'>{$fail}</a></li>
+            </ul>
+
+        </div>
+        <div class="col-md-1"></div>
+        <div class ="doughnut col-md-4" style="padding-top:80px;" >
+            <canvas id="canvas" height="400" width="400"></canvas>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+

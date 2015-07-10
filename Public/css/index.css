@@ -1,0 +1,19 @@
+body{
+    font-family: "Microsoft YaHei","微软雅黑","宋体",Arial,Verdana,sans-serif;
+}
+.email-box p{
+	font-size:17px;
+	margin:20px 0 20px 40px;
+	line-height: 20px;
+}
+.iconContainer{
+	width: 100%;
+	height: auto;
+	padding-left: 0;
+	top:400px;
+	margin-top: 50px;
+}
+.iconContainer img{
+	width: 80px !important;
+	height: 104px !important;
+}

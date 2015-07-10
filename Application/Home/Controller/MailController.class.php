@@ -1,6 +1,7 @@
 <?php
 namespace Home\Controller;
-//set_time_limit(0);
+use ORG\Util\IncomingMailAttachment;
+use ORG\Util\Mailbox;
 use Think\Controller;
 class MailController extends Controller
 {
@@ -13,87 +14,156 @@ class MailController extends Controller
      */
     public function receiveOutMail()
     {
-
         $mailAccountModel = M('Mail_account');
         $mailAccount = $mailAccountModel->find();
         if($mailAccount['receiveday']==-1){
             return;
         }else{
-            //var_dump($mailAccount);
             session_write_close();
-            import("@.ORG.Util.receive");
-            $mail_list = array();
-            $mail = new \receiveMail();
-            $new = 0;
-            $connect = $mail->connect($mailAccount['pop3server'], '110', $mailAccount['emailusername'], $mailAccount['emailpassword'], 'INBOX', 'pop3/novalidate-cert');
-            if (!$connect) {
-                $connect = $mail->connect($mailAccount['pop3server'], '995', $mailAccount['emailusername'], $mailAccount['emailpassword'], 'INBOX', 'pop3/ssl/novalidate-cert');
+            import("@.ORG.Util.Mailbox");
+            import("@.ORG.Util.IncomingMail");
+            import("@.ORG.Util.Mailbox");
+            $mailbox =new Mailbox('{'.$mailAccount['pop3server'].':995/pop3/ssl}INBOX', $mailAccount['emailusername'],$mailAccount['emailpassword'], C('DOWNLOAD_UPLOAD.rootPath'));
+            $mailsIds = $mailbox->searchMailBox('RECENT');
+            if(!$mailsIds) {
+                die('Mailbox is empty');
             }
-            //var_dump($connect);
-            $mail_count = $mail->mail_total_count();
+            $mailCount = count($mailsIds);
+            for($i=$mailCount;$i>0;$i--){
+                $receiveMailModel=M('ReceiveMails');
+                $mailinfo=$mailbox->getMailsInfo(array($i));
+                if(!empty($mailinfo[0]->message_id)){
+                    $mid=$mailinfo[0]->message_id;
+                }else{
+                    $mid=$i."_".time()."@Localhost";
+                }
+                if($mailinfo[0]->udate>time()-86400*$mailAccount['receiveday']){
+                    //$map['mid']=$mid;
+                    $map['createtime']=$mailinfo[0]->udate;
 
-            if ($connect) {
+                    $count=$receiveMailModel->where($map)->count();
+                    if($count==0){
+                        $mail=$mailbox->getMail($i);
+                        $data=array();
+                        $data['mid']=$mid;
+                        $data['title']=$mail->subject;
+                        $data['from']=$mail->fromName.'|'.$mail->fromAddress;
+                        $data['to']=$mailAccount['emailaddress'];
+//                        foreach($mail->to as $item){
+//                            $data['to']=$data['to'].$item.';';
+//                        }
 
-                for ($i = 1; $i <= $mail_count; $i++) {
-                    $mail_id = $mail_count - $i + 1;
-                    $item = $mail->mail_list($mail_id);
-                    $map = array();
-                    if (empty($item[$mail_id])) {
-                        $temp_mail_header = $mail->mail_header($mail_id);
-                        $map['mid'] = $temp_mail_header['mid'];
-                    } else {
-                        $map['mid'] = $item[$mail_id];
-                    }
-                    $count = M('Receive_mails')->where($map)->count();
-
-                    if ($count == 0) {
-                        $model = M("Receive_mails");
-                        $mailHeader = $mail->mail_header($mail_id);
-                        $data = array();
-                        $data['mid'] = $mailHeader['mid'];
-                        $data['title'] = $mailHeader['name'];
-                        $data['content'] = $mailHeader['content'];
-                        $data['from'] = $mailHeader['from'];
-                        $data['to'] = $mailHeader['to'];
-                        $data['createtime']=$mailHeader['create_time'];
-                        //var_dump($data['createtime']<strtotime(date('y-m-d h:i:s')) - 86400 * 30);
-                        if($mailAccount['receiveday']!=0){
-
-                            if($data['createtime']<strtotime(date('y-m-d h:i:s')) - 86400*$mailAccount['receiveday']){
-                                $mail -> close_mail();
-                                return ;
+                        $data['createtime']=$mailinfo[0]->udate;
+                        if($mail->textPlain!=null){
+                            $data['content']=$mail->textPlain;
+                        }
+                        if($mail->textHtml!=null){
+                            $data['content']=$mail->textHtml;
+                        }
+                        if($mail->attachments!=null){
+                            $incomingMailAttachment=$mail->attachments;
+                            $addFile="";
+                            foreach($incomingMailAttachment as $item){
+                                $fileModel=M('File');
+                                $fileData=array();
+                                $fileData['name']=$item->name;
+                                $fileData['savename']=$item->saveName;
+                                $fileData['create_time']=$data['createtime'];
+                                //$fileModel->save($fileData);
+                                $addFileID=$fileModel->add($fileData);
+                                if(!$addFileID){
+                                    $this->error("附件存储错误！");
+                                }else{
+                                    $addFile=$addFileID.";".$addFile;
+                                }
                             }
+                            $data['add_file']=$addFile;
+                        }else{
+                            $data['add_file']="";
+                        }
+                        //var_dump($data);
+                        if(!$receiveMailModel->add($data)){
+                            $this->error("邮件存储错误！");
                         }
 
-                        $model->add($data);
-                    }else{
 
-                        $mail->close_mail();
+                    }else{
+                        $mailbox->__destruct();
+                        return;
                     }
+
+                }else{
+                    $mailbox->__destruct();
+                    return;
                 }
-                $mail->close_mail();
+
 
             }
+            $mailbox->__destruct();
+            return;
 
 
         }
 
+
+    }
+    //--------------------------------------------------------------------
+    //   接收邮件附件
+    //--------------------------------------------------------------------
+    private function _receive_file($str, &$data) {
+
+        $ar = array_filter(explode("?", $str));
+        $files = array();
+        if (!empty($ar)) {
+            foreach ($ar as $key => $value) {
+                $ar2 = explode("|", $value);
+                $cid = $ar2[0];
+                $inline = $ar2[1];
+                $file_name = $ar2[2];
+                $tmp_name = $ar2[3];
+
+                $files[$key]['name'] = $file_name;
+                $files[$key]['tmp_name'] = $tmp_name;
+                $files[$key]['size'] = filesize($tmp_name);
+                $files[$key]['is_move'] = true;
+
+                if (!empty($files)) {
+                    $File = D('File');
+                    $file_driver = C('DOWNLOAD_UPLOAD_DRIVER');
+                    $info = $File -> upload($files, C('DOWNLOAD_UPLOAD'), C('DOWNLOAD_UPLOAD_DRIVER'), C("UPLOAD_{$file_driver}_CONFIG"));
+                    if ($inline == "INLINE") {
+                        $data['content'] = str_replace("cid:" . $cid, $info[0]['path'],$data['content']);
+                    } else {
+                        $add_file=$info[0]['id'].';';
+                        //$add_file = $add_file . think_encrypt($info[0]['id']) . ';';
+                    }
+                }
+            }
+        }
+        return $add_file;
     }
 
     //--------------------------------------------------------------------
     //  发送邮件给外部
     //--------------------------------------------------------------------
     public function sendMail() {
+        $role_id=$_SESSION['roleId'];
+        $dealMailId=$_REQUEST['mail_id'];
+        if($role_id==3&&$dealMailId!=null){
+            $receiveModel=M("ReceiveMails");
+            $data=array();
+            $data['deal_status']=1;
+            $receiveModel->where('id='.$dealMailId)->save($data);
+            $data=null;
+        }
         $mailAccountModel = M('Mail_account');
         $mailAccount = $mailAccountModel->find();
 
         $title =I('title');
-        $body = I('emailContent');
-
+        $body = htmlspecialchars_decode(I('emailContent'));
         $to = I('to');
         $cc = "";//I('cc');
         $bcc = "";//I('bcc');
-
         //$this -> _set_recent($to . $cc . $bcc);
 
         import("@.ORG.Util.send");
@@ -197,14 +267,32 @@ class MailController extends Controller
             }
 
             $mail -> MsgHTML($body);
+            $files=$_FILES;
+            $addfiles="";
+            foreach($files as $item){
+                if($item['size']>0&&$item['size']<1024*20000) {
+                    $dir = "Uploads/Download/";
+                    $imgName =$item['name'];
+                    $tmp=explode(".",$imgName);
+                    $count=count($tmp);
+                    $type=$tmp[$count-1];
+                    $rand = rand(0, 8000000);
+                    $saveName = $rand . time().'.'.$type;
+                    $path = $dir . $saveName;
+                    if (!is_dir($dir)) {
+                        mkdir($dir);
+                    }
+                    $i = move_uploaded_file($item['tmp_name'], $path);
+                    $filedata['name']=$imgName;
+                    $filedata['savename']=$saveName;
+                    $filedata['create_time']=time();
+                    $fileModel=M("File");
+                    $fileid=$fileModel->add($filedata);
+                    if($fileid){
+                        $mail->AddAttachment(DOC_ROOT."/Uploads/Download/".$saveName,$imgName);
+                        $addfiles=$addfiles.$fileid.';';
+                    }
 
-            $add_file = $_REQUEST['add_file'];
-            if (!empty($add_file)) {
-                $files = array_filter(explode(';', $add_file));
-                foreach ($files as $file) {
-                    $file_id = think_decrypt($file);
-                    $vo=M("File")->find($file_id);
-                    $mail -> AddAttachment("..".__ROOT__ ."/".C('DOWNLOAD_UPLOAD.rootPath') . $vo['savepath'].$vo['savename'],$vo['name']);
                 }
             }
 
@@ -213,11 +301,13 @@ class MailController extends Controller
             $data['title']=$title;
             $data['content']=$body;
             $data['from']=$mailAccount['emailname'] . '|' . $mailAccount['emailaddress'];
-            $data['user_id']=getUserId();
+            $data['user_id']=$_SESSION['userId'];
+            $data['add_file']=$addfiles;
             if($_REQUEST['mail_id']!=NULL&&$_REQUEST['mail_id']!=''){
                 $data['pre_mail_id']=$_REQUEST['mail_id'];
             }
             $data['to']=$to;
+            $data['createtime']=time();
             // $data['type'];
             //后期要将存数据库，发邮件的过程存高速缓存，定时任务执行
             $id = $sendMailModel -> add($data);
@@ -242,6 +332,16 @@ class MailController extends Controller
             //Boring error messages from anything else!
         }
     }
+    public function deal(){
+        $email_id=$_REQUEST['email_id'];
+        //var_dump($email_id);
+        $receiveMailModel=M("ReceiveMails");
+        $data=array();
+        $data['deal_status']=1;
+        $receiveMailModel->where('id='.$email_id)->save($data);
+        echo json_encode("OK");
+    }
+
     private function get_mail_list_by_dept_id($id) {
         $dept = tree_to_list(list_to_tree( M("Dept") -> where('is_del=0') -> select(), $id));
         $dept = rotate($dept);
@@ -253,5 +353,8 @@ class MailController extends Controller
         $data = $model -> where($where) -> select();
         return $data;
     }
+
+
+
 
 }
